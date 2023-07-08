@@ -12,11 +12,13 @@ public static class DependencyContainer
     public static void AddInfrastructureDependencies(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        
+
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IDiseaseRepository, DiseaseRepository>();
+        services.AddScoped<IAllergiesRepository, AllergiesRepository>();
 
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IDiseaseService, DiseaseService>();
+        services.AddScoped<IAllergiesService, AllergiesService>();
     }
 }

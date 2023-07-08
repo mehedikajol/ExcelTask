@@ -7,6 +7,7 @@ public interface IUnitOfWork
 
     IPatientRepository Patients { get; }
     IDiseaseRepository Diseases { get; }
+    IAllergiesRepository Allergies { get; }
 
     Task CompleteAsync();
 }
