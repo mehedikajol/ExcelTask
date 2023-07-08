@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ExcelTask.Api.Controllers;
 
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 [ApiController]
 public class DiseasesController : ControllerBase
 {
