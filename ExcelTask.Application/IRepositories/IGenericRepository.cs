@@ -4,9 +4,9 @@ public interface IGenericRepository<TEntity>
     where TEntity : class
 {
     Task<IEnumerable<TEntity>> GetAllEntities();
-    Task<TEntity> GetEntityById(Guid id);
+    Task<TEntity> GetEntityById(int id);
 
-    Task<bool> AddEntity(TEntity entity);
-    Task<bool> UpdateEntity(TEntity entity);
-    Task<bool> DeleteEntityById(Guid id);
+    Task AddEntity(TEntity entity);
+    Task UpdateEntity(TEntity entity);
+    Task DeleteEntityById(int id);
 }
