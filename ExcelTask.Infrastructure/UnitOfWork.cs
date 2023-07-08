@@ -16,11 +16,13 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         Patients = new PatientRepository(_context);
         Diseases = new DiseaseRepository(_context);
         Allergies = new AllergiesRepository(_context);
+        NCDs = new NCDRepository(_context);
     }
 
     public IPatientRepository Patients { get; private set; }
     public IDiseaseRepository Diseases { get; private set; }
     public IAllergiesRepository Allergies { get; private set; }
+    public INCDRepository NCDs { get; private set; }
 
     public async Task CompleteAsync()
     {

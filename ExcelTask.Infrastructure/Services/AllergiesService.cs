@@ -26,7 +26,7 @@ public class AllergiesService : IAllergiesService
                 Name = entity.Name,
             });
         }
-        return allergies.ToList();
+        return allergies;
     }
 
     public async Task<AllergiesViewDto> GetAllergiesByIdAsync(int id)
