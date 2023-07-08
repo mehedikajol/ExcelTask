@@ -71,4 +71,39 @@ public class DiseasesController : Controller
         }
         return View(disease);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        DiseaseUpdateDto disease = new DiseaseUpdateDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/Diseases/" + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            disease = JsonConvert.DeserializeObject<DiseaseUpdateDto>(data);
+        }
+        return View(disease);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(DiseaseUpdateDto disease)
+    {
+        try
+        {
+            var data = JsonConvert.SerializeObject(disease);
+            var content = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + "/Diseases", content);
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return View();
+        }
+        return View();
+    }
 }
