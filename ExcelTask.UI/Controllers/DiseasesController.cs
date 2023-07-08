@@ -50,7 +50,8 @@ public class DiseasesController : Controller
             {
                 return RedirectToAction(nameof(Index));
             }
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
             return View();
@@ -105,5 +106,31 @@ public class DiseasesController : Controller
             return View();
         }
         return View();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        DiseaseViewDto disease = new DiseaseViewDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "/Diseases/" + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            disease = JsonConvert.DeserializeObject<DiseaseViewDto>(data);
+        }
+        return View(disease);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(DiseaseViewDto disease)
+    {
+        HttpResponseMessage response = await _client.DeleteAsync(_client.BaseAddress + "/Diseases/" + disease.Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+        return View(disease);
     }
 }
