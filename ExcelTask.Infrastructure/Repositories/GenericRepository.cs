@@ -16,17 +16,17 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
         _dbSet = _context.Set<TEntity>();
     }
 
-    public virtual async Task<IEnumerable<TEntity>> GetAllEntities()
+    public virtual async Task<IEnumerable<TEntity>> GetAllEntitiesAsync()
     {
         return await _dbSet.ToListAsync();
     }
 
-    public virtual async Task<TEntity> GetEntityById(int id)
+    public virtual async Task<TEntity> GetEntityByIdAsync(int id)
     {
         return await _dbSet.FindAsync(id);
     }
 
-    public virtual async Task AddEntity(TEntity entity)
+    public virtual async Task AddEntityAsync(TEntity entity)
     {
         await _dbSet.AddAsync(entity);
     }
@@ -37,9 +37,9 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
         return Task.CompletedTask;
     }
 
-    public virtual async Task DeleteEntityById(int id)
+    public virtual async Task DeleteEntityByIdAsync(int id)
     {
-        var entity = await GetEntityById(id);
+        var entity = await GetEntityByIdAsync(id);
         _dbSet.Remove(entity);
     }
 }

@@ -1,5 +1,7 @@
-﻿namespace ExcelTask.Infrastructure.Services;
+﻿using ExcelTask.Application.IServices;
 
-public class PatientService
+namespace ExcelTask.Infrastructure.Services;
+
+public class PatientService : IPatientService
 {
 }
