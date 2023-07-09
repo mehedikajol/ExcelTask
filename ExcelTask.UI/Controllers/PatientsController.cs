@@ -1,5 +1,7 @@
 ﻿using ExcelTask.Application.DTOs;
+using ExcelTask.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Security.Policy;
 using System.Text;
@@ -15,8 +17,13 @@ public class PatientsController : BaseController
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        var diseases = await GetAllDiseases();
+        var epilepsyies = GetAllEpilepsies();
+        ViewData["Diseases"] = new SelectList(diseases, "Id", "Name");
+        ViewData["Epilepsyies"] = new SelectList(epilepsyies, "Id", "Name");
+
         return View();
     }
 
@@ -39,5 +46,26 @@ public class PatientsController : BaseController
             return View();
         }
         return View();
+    }
+
+
+    private async Task<List<DiseaseViewDto>> GetAllDiseases()
+    {
+        List<DiseaseViewDto> diseases = new List<DiseaseViewDto>();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "Diseases/");
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            diseases = JsonConvert.DeserializeObject<List<DiseaseViewDto>>(data);
+        }
+        return diseases;
+    }
+
+    private IEnumerable<object> GetAllEpilepsies()
+    {
+        var mainCategories = from Epilepsy s in Enum.GetValues(typeof(Epilepsy))
+                             select new { Id = s.GetHashCode(), Name = s.ToString() };
+        return mainCategories;
     }
 }
