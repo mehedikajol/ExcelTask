@@ -5,22 +5,22 @@ using System.Text;
 
 namespace ExcelTask.UI.Controllers;
 
-public class DiseasesController : BaseController
+public class AllergiesController : BaseController
 {
-    string url = "Diseases/";
+    string url = "Allergies/";
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        List<DiseaseViewDto> diseases = new List<DiseaseViewDto>();
+        List<AllergiesViewDto> allergies = new List<AllergiesViewDto>();
         HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url);
 
         if (response.IsSuccessStatusCode)
         {
             string data = await response.Content.ReadAsStringAsync();
-            diseases = JsonConvert.DeserializeObject<List<DiseaseViewDto>>(data);
+            allergies = JsonConvert.DeserializeObject<List<AllergiesViewDto>>(data);
         }
-        return View(diseases);
+        return View(allergies);
     }
 
     [HttpGet]
@@ -30,11 +30,11 @@ public class DiseasesController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(DiseaseCreateDto disease)
+    public async Task<IActionResult> Create(AllergiesCreateDto allergies)
     {
         try
         {
-            var data = JsonConvert.SerializeObject(disease);
+            var data = JsonConvert.SerializeObject(allergies);
             var content = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
             if (response.IsSuccessStatusCode)
@@ -53,37 +53,37 @@ public class DiseasesController : BaseController
     [HttpGet]
     public async Task<IActionResult> View(int id)
     {
-        DiseaseViewDto disease = new DiseaseViewDto();
-        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url +  id);
-
-        if (response.IsSuccessStatusCode)
-        {
-            string data = await response.Content.ReadAsStringAsync();
-            disease = JsonConvert.DeserializeObject<DiseaseViewDto>(data);
-        }
-        return View(disease);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Edit(int id)
-    {
-        DiseaseUpdateDto disease = new DiseaseUpdateDto();
+        AllergiesViewDto allergies = new AllergiesViewDto();
         HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
 
         if (response.IsSuccessStatusCode)
         {
             string data = await response.Content.ReadAsStringAsync();
-            disease = JsonConvert.DeserializeObject<DiseaseUpdateDto>(data);
+            allergies = JsonConvert.DeserializeObject<AllergiesViewDto>(data);
         }
-        return View(disease);
+        return View(allergies);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        AllergiesUpdateDto allergies = new AllergiesUpdateDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            allergies = JsonConvert.DeserializeObject<AllergiesUpdateDto>(data);
+        }
+        return View(allergies);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(DiseaseUpdateDto disease)
+    public async Task<IActionResult> Edit(AllergiesUpdateDto allergies)
     {
         try
         {
-            var data = JsonConvert.SerializeObject(disease);
+            var data = JsonConvert.SerializeObject(allergies);
             var content = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
             if (response.IsSuccessStatusCode)
@@ -102,26 +102,26 @@ public class DiseasesController : BaseController
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        DiseaseViewDto disease = new DiseaseViewDto();
+        AllergiesViewDto allergies = new AllergiesViewDto();
         HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
 
         if (response.IsSuccessStatusCode)
         {
             string data = await response.Content.ReadAsStringAsync();
-            disease = JsonConvert.DeserializeObject<DiseaseViewDto>(data);
+            allergies = JsonConvert.DeserializeObject<AllergiesViewDto>(data);
         }
-        return View(disease);
+        return View(allergies);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Delete(DiseaseViewDto disease)
+    public async Task<IActionResult> Delete(AllergiesViewDto allergies)
     {
-        HttpResponseMessage response = await _client.DeleteAsync(_client.BaseAddress + url + disease.Id);
+        HttpResponseMessage response = await _client.DeleteAsync(_client.BaseAddress + url + allergies.Id);
 
         if (response.IsSuccessStatusCode)
         {
             return RedirectToAction(nameof(Index));
         }
-        return View(disease);
+        return View(allergies);
     }
 }

@@ -1,7 +1,5 @@
 ﻿using ExcelTask.Application.DTOs;
 using ExcelTask.Application.IServices;
-using ExcelTask.Infrastructure.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExcelTask.Api.Controllers;

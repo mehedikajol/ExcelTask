@@ -14,13 +14,13 @@ public class NCDService : INCDService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<NcdVIewDto>> GetAllNcdsAsync()
+    public async Task<IEnumerable<NcdViewDto>> GetAllNcdsAsync()
     {
         var entities = await _unitOfWork.NCDs.GetAllEntitiesAsync();
-        var ncds = new List<NcdVIewDto>();
+        var ncds = new List<NcdViewDto>();
         foreach (var entity in entities)
         {
-            ncds.Add(new NcdVIewDto
+            ncds.Add(new NcdViewDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -29,10 +29,10 @@ public class NCDService : INCDService
         return ncds;
     }
 
-    public async Task<NcdVIewDto> GetNcdByIdAsync(int id)
+    public async Task<NcdViewDto> GetNcdByIdAsync(int id)
     {
         var entity = await _unitOfWork.NCDs.GetEntityByIdAsync(id);
-        return new NcdVIewDto
+        return new NcdViewDto
         {
             Id = entity.Id,
             Name = entity.Name,

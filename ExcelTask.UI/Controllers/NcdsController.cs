@@ -5,22 +5,22 @@ using System.Text;
 
 namespace ExcelTask.UI.Controllers;
 
-public class DiseasesController : BaseController
+public class NcdsController : BaseController
 {
-    string url = "Diseases/";
+    string url = "Ncds/";
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        List<DiseaseViewDto> diseases = new List<DiseaseViewDto>();
+        List<NcdViewDto> ncds = new List<NcdViewDto>();
         HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url);
 
         if (response.IsSuccessStatusCode)
         {
             string data = await response.Content.ReadAsStringAsync();
-            diseases = JsonConvert.DeserializeObject<List<DiseaseViewDto>>(data);
+            ncds = JsonConvert.DeserializeObject<List<NcdViewDto>>(data);
         }
-        return View(diseases);
+        return View(ncds);
     }
 
     [HttpGet]
@@ -30,11 +30,11 @@ public class DiseasesController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(DiseaseCreateDto disease)
+    public async Task<IActionResult> Create(NcdCreateDto ncd)
     {
         try
         {
-            var data = JsonConvert.SerializeObject(disease);
+            var data = JsonConvert.SerializeObject(ncd);
             var content = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
             if (response.IsSuccessStatusCode)
@@ -53,37 +53,37 @@ public class DiseasesController : BaseController
     [HttpGet]
     public async Task<IActionResult> View(int id)
     {
-        DiseaseViewDto disease = new DiseaseViewDto();
-        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url +  id);
-
-        if (response.IsSuccessStatusCode)
-        {
-            string data = await response.Content.ReadAsStringAsync();
-            disease = JsonConvert.DeserializeObject<DiseaseViewDto>(data);
-        }
-        return View(disease);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Edit(int id)
-    {
-        DiseaseUpdateDto disease = new DiseaseUpdateDto();
+        NcdViewDto ncd = new NcdViewDto();
         HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
 
         if (response.IsSuccessStatusCode)
         {
             string data = await response.Content.ReadAsStringAsync();
-            disease = JsonConvert.DeserializeObject<DiseaseUpdateDto>(data);
+            ncd = JsonConvert.DeserializeObject<NcdViewDto>(data);
         }
-        return View(disease);
+        return View(ncd);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        NcdUpdateDto ncd = new NcdUpdateDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            ncd = JsonConvert.DeserializeObject<NcdUpdateDto>(data);
+        }
+        return View(ncd);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(DiseaseUpdateDto disease)
+    public async Task<IActionResult> Edit(NcdUpdateDto ncd)
     {
         try
         {
-            var data = JsonConvert.SerializeObject(disease);
+            var data = JsonConvert.SerializeObject(ncd);
             var content = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
             if (response.IsSuccessStatusCode)
@@ -102,26 +102,26 @@ public class DiseasesController : BaseController
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        DiseaseViewDto disease = new DiseaseViewDto();
+        NcdViewDto ncd = new NcdViewDto();
         HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
 
         if (response.IsSuccessStatusCode)
         {
             string data = await response.Content.ReadAsStringAsync();
-            disease = JsonConvert.DeserializeObject<DiseaseViewDto>(data);
+            ncd = JsonConvert.DeserializeObject<NcdViewDto>(data);
         }
-        return View(disease);
+        return View(ncd);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Delete(DiseaseViewDto disease)
+    public async Task<IActionResult> Delete(NcdViewDto ncd)
     {
-        HttpResponseMessage response = await _client.DeleteAsync(_client.BaseAddress + url + disease.Id);
+        HttpResponseMessage response = await _client.DeleteAsync(_client.BaseAddress + url + ncd.Id);
 
         if (response.IsSuccessStatusCode)
         {
             return RedirectToAction(nameof(Index));
         }
-        return View(disease);
+        return View(ncd);
     }
 }
