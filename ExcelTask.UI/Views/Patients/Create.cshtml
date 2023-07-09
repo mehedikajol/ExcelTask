@@ -150,8 +150,6 @@
                 allergies: patientAllergies
             };
 
-            console.log(patient);
-
             $.ajax({
                 type: "POST",
                 dataType: 'json',
@@ -159,7 +157,9 @@
                 contentType: "application/json",
                 traditional: true,
                 data: JSON.stringify(patient),
-                success: function (value) { 
+                success: function (response) {
+                    console.log(response);
+                    window.location.href = "/Patients/Index";
                 }
             });
         });

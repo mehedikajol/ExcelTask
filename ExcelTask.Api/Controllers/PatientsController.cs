@@ -1,5 +1,6 @@
 ﻿using ExcelTask.Application.DTOs;
 using ExcelTask.Application.IServices;
+using ExcelTask.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExcelTask.Api.Controllers;
@@ -13,6 +14,13 @@ public class PatientsController : ControllerBase
     public PatientsController(IPatientService patientService)
     {
         _patientService = patientService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        var patients = await _patientService.GetAllPatientsAsync();
+        return Ok(patients);
     }
 
     [HttpPost]

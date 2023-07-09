@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<PatientViewDto>
+
+@{
     ViewData["Title"] = "Index";
 }
 
@@ -7,3 +9,30 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Disease</th>
+            <th>Epilepsy</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.DiseaseId</td>
+                <td>@item.Epilepsy</td>
+                <td>
+                    <a asp-asp-controller="Patients" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-asp-controller="Patients" asp-action="View" asp-route-id="@item.Id">Details</a> |
+                    <a asp-asp-controller="Patients" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

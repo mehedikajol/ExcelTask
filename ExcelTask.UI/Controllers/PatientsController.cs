@@ -11,9 +11,17 @@ namespace ExcelTask.UI.Controllers;
 public class PatientsController : BaseController
 {
     string url = "Patients/";
-    public IActionResult Index()
+    public async Task<IActionResult> IndexAsync()
     {
-        return View();
+        List<PatientViewDto> patients = new List<PatientViewDto>();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            patients = JsonConvert.DeserializeObject<List<PatientViewDto>>(data);
+        }
+        return View(patients);
     }
 
     [HttpGet]
@@ -41,7 +49,11 @@ public class PatientsController : BaseController
             HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction(nameof(Index));
+                return new JsonResult(new
+                {
+                    Done = true,
+                    Message = "Success"
+                });
             }
         }
         catch (Exception ex)
