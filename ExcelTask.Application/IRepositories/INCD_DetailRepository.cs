@@ -2,6 +2,6 @@
 
 namespace ExcelTask.Application.IRepositories;
 
-public interface INCDDetailRepository : IGenericRepository<NCD_Detail>
+public interface INCD_DetailRepository : IGenericRepository<NCD_Detail>
 {
 }

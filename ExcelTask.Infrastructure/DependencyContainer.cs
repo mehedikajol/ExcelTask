@@ -17,6 +17,8 @@ public static class DependencyContainer
         services.AddScoped<IDiseaseRepository, DiseaseRepository>();
         services.AddScoped<IAllergiesRepository, AllergiesRepository>();
         services.AddScoped<INCDRepository, NCDRepository>();
+        services.AddScoped<IAllergies_DetailRepository, Allergies_DetailRepository>();
+        services.AddScoped<INCD_DetailRepository, NCD_DetailRepository>();
 
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IDiseaseService, DiseaseService>();
