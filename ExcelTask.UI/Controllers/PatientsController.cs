@@ -21,8 +21,12 @@ public class PatientsController : BaseController
     {
         var diseases = await GetAllDiseases();
         var epilepsyies = GetAllEpilepsies();
+        var allergies = await GetAllAllergies();
+        var ncds = await GetAllNcds();
         ViewData["Diseases"] = new SelectList(diseases, "Id", "Name");
         ViewData["Epilepsyies"] = new SelectList(epilepsyies, "Id", "Name");
+        ViewData["Allergies"] = new List<AllergiesViewDto>(allergies);
+        ViewData["Ncds"] = new List<NcdViewDto>(ncds);
 
         return View();
     }
@@ -67,5 +71,31 @@ public class PatientsController : BaseController
         var mainCategories = from Epilepsy s in Enum.GetValues(typeof(Epilepsy))
                              select new { Id = s.GetHashCode(), Name = s.ToString() };
         return mainCategories;
+    }
+
+    private async Task<List<AllergiesViewDto>> GetAllAllergies()
+    {
+        List<AllergiesViewDto> allergies = new List<AllergiesViewDto>();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "Allergies/");
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            allergies = JsonConvert.DeserializeObject<List<AllergiesViewDto>>(data);
+        }
+        return allergies;
+    }
+
+    private async Task<List<NcdViewDto>> GetAllNcds()
+    {
+        List<NcdViewDto> ncds = new List<NcdViewDto>();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + "Ncds/");
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            ncds = JsonConvert.DeserializeObject<List<NcdViewDto>>(data);
+        }
+        return ncds;
     }
 }
