@@ -4,10 +4,10 @@ namespace ExcelTask.Application.IServices;
 
 public interface INCD_DetailService
 {
-    Task<IEnumerable<Ncd_DetailUPdateDto>> GetAllNcdDetailsAsync();
-    Task<Ncd_DetailUPdateDto> GetNcdDetailByIdAsync(int id);
+    Task<IEnumerable<Ncd_DetailViewDto>> GetAllNcdDetailsAsync();
+    Task<Ncd_DetailViewDto> GetNcdDetailByIdAsync(int id);
 
     Task AddNcdDetailAsync(Ncd_DetailCreateDto ncdDetail);
-    Task UpdateDetailNcd(Ncd_DetailUPdateDto ncdDetail);
+    Task UpdateDetailNcd(Ncd_DetailUpdateDto ncdDetail);
     Task DeleteNcdDetailAsync(int id);
 }

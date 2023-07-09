@@ -1,32 +1,70 @@
-﻿using ExcelTask.Application.DTOs;
+﻿using ExcelTask.Application;
+using ExcelTask.Application.DTOs;
 using ExcelTask.Application.IServices;
+using ExcelTask.Core.Entities;
 
 namespace ExcelTask.Infrastructure.Services;
 
 public class Allergies_DetailService : IAllergies_DetailService
 {
-    public Task<IEnumerable<Allergies_DetailViewDto>> GetAllAllergiesDetailsAsync()
+    private readonly IUnitOfWork _unitOfWork;
+
+    public Allergies_DetailService(IUnitOfWork unitOfWork)
     {
-        throw new NotImplementedException();
+        _unitOfWork = unitOfWork;
     }
 
-    public Task<Allergies_DetailViewDto> GetAllergiesDetailByIdAsync(int id)
+    public async Task<IEnumerable<Allergies_DetailViewDto>> GetAllAllergiesDetailsAsync()
     {
-        throw new NotImplementedException();
+        var entities = await _unitOfWork.Allergies_Details.GetAllEntitiesAsync();
+        var allergiesDetails = new List<Allergies_DetailViewDto>();
+        foreach (var entity in entities)
+        {
+            allergiesDetails.Add(new Allergies_DetailViewDto
+            {
+                Id = entity.Id,
+                PatientId = entity.PatientId,
+                AllergiesId = entity.AllergiesId,
+            });
+        }
+        return allergiesDetails;
     }
 
-    public Task AddAllergiesDetailAsync(Allergies_DetailCreateDto allergiesDetail)
+    public async Task<Allergies_DetailViewDto> GetAllergiesDetailByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var entity = await _unitOfWork.Allergies_Details.GetEntityByIdAsync(id);
+        return new Allergies_DetailViewDto
+        {
+            Id = entity.Id,
+            PatientId = entity.PatientId,
+            AllergiesId = entity.AllergiesId
+        };
     }
 
-    public Task UpdateAllergiesDetail(Allergies_DetailUpdateDto allergiesDetail)
+    public async Task AddAllergiesDetailAsync(Allergies_DetailCreateDto allergiesDetail)
     {
-        throw new NotImplementedException();
+        await _unitOfWork.Allergies_Details.AddEntityAsync(new Allergies_Detail
+        {
+            PatientId = allergiesDetail.PatientId,
+            AllergiesId = allergiesDetail.AllergiesId
+        });
+        await _unitOfWork.CompleteAsync();
     }
 
-    public Task DeleteAllergiesDetailAsync(int id)
+    public async Task UpdateAllergiesDetail(Allergies_DetailUpdateDto allergiesDetail)
     {
-        throw new NotImplementedException();
+        await _unitOfWork.Allergies_Details.UpdateEntity(new Allergies_Detail
+        {
+            Id = allergiesDetail.Id,
+            PatientId = allergiesDetail.PatientId,
+            AllergiesId = allergiesDetail.AllergiesId
+        });
+        await _unitOfWork.CompleteAsync();
+    }
+
+    public async Task DeleteAllergiesDetailAsync(int id)
+    {
+        await _unitOfWork.Allergies_Details.DeleteEntityByIdAsync(id);
+        await _unitOfWork.CompleteAsync();
     }
 }

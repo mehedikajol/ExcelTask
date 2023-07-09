@@ -1,32 +1,70 @@
-﻿using ExcelTask.Application.DTOs;
+﻿using ExcelTask.Application;
+using ExcelTask.Application.DTOs;
 using ExcelTask.Application.IServices;
+using ExcelTask.Core.Entities;
 
 namespace ExcelTask.Infrastructure.Services;
 
 public class NCD_DetailService : INCD_DetailService
 {
-    public Task<IEnumerable<Ncd_DetailUPdateDto>> GetAllNcdDetailsAsync()
+    private readonly IUnitOfWork _unitOfWork;
+
+    public NCD_DetailService(IUnitOfWork unitOfWork)
     {
-        throw new NotImplementedException();
+        _unitOfWork = unitOfWork;
     }
 
-    public Task<Ncd_DetailUPdateDto> GetNcdDetailByIdAsync(int id)
+    public async Task<IEnumerable<Ncd_DetailViewDto>> GetAllNcdDetailsAsync()
     {
-        throw new NotImplementedException();
+        var entities = await _unitOfWork.NCD_Details.GetAllEntitiesAsync();
+        var ncdDetails = new List<Ncd_DetailViewDto>();
+        foreach (var entity in entities)
+        {
+            ncdDetails.Add(new Ncd_DetailViewDto
+            {
+                Id = entity.Id,
+                PatientId = entity.PatientId,
+                NCDId = entity.NCDId
+            });
+        }
+        return ncdDetails;
     }
 
-    public Task AddNcdDetailAsync(Ncd_DetailCreateDto ncdDetail)
+    public async Task<Ncd_DetailViewDto> GetNcdDetailByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var entity = await _unitOfWork.NCD_Details.GetEntityByIdAsync(id);
+        return new Ncd_DetailViewDto
+        {
+            Id = entity.Id,
+            PatientId = entity.PatientId,
+            NCDId = entity.NCDId
+        };
     }
 
-    public Task UpdateDetailNcd(Ncd_DetailUPdateDto ncdDetail)
+    public async Task AddNcdDetailAsync(Ncd_DetailCreateDto ncdDetail)
     {
-        throw new NotImplementedException();
+        await _unitOfWork.NCD_Details.AddEntityAsync(new NCD_Detail
+        {
+            PatientId = ncdDetail.PatientId,
+            NCDId = ncdDetail.NCDId
+        });
+        await _unitOfWork.CompleteAsync();
     }
 
-    public Task DeleteNcdDetailAsync(int id)
+    public async Task UpdateDetailNcd(Ncd_DetailUpdateDto ncdDetail)
     {
-        throw new NotImplementedException();
+        await _unitOfWork.NCD_Details.UpdateEntity(new NCD_Detail
+        {
+            Id = ncdDetail.Id,
+            PatientId = ncdDetail.PatientId,
+            NCDId = ncdDetail.NCDId
+        });
+        await _unitOfWork.CompleteAsync();
+    }
+
+    public async Task DeleteNcdDetailAsync(int id)
+    {
+        await _unitOfWork.NCD_Details.DeleteEntityByIdAsync(id);
+        await _unitOfWork.CompleteAsync();
     }
 }
