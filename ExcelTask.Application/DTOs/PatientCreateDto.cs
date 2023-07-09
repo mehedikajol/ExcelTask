@@ -8,5 +8,5 @@ public class PatientCreateDto
     public int Epilepsy { get; set; }
 
     public List<Ncd_DetailCreateDto>? NCDs { get; set; }
-    public List<Allergies_DetailCreateDto>?  Allergies { get; set; }
+    public List<Allergies_DetailCreateDto>? Allergies { get; set; }
 }

@@ -28,11 +28,11 @@ public class PatientsController : BaseController
         ViewData["Allergies"] = new List<AllergiesViewDto>(allergies);
         ViewData["Ncds"] = new List<NcdViewDto>(ncds);
 
-        return View();
+        return View(new PatientCreateDto());
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(PatientCreateDto patient)
+    public async Task<IActionResult> Create([FromBody] PatientCreateDto patient)
     {
         try
         {
