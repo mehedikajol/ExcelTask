@@ -24,5 +24,7 @@ public static class DependencyContainer
         services.AddScoped<IDiseaseService, DiseaseService>();
         services.AddScoped<IAllergiesService, AllergiesService>();
         services.AddScoped<INCDService, NCDService>();
+        services.AddScoped<IAllergies_DetailService, Allergies_DetailService>();
+        services.AddScoped<INCD_DetailService, NCD_DetailService>();
     }
 }
