@@ -32,20 +32,23 @@ public class DiseasesController : BaseController
     [HttpPost]
     public async Task<IActionResult> Create(DiseaseCreateDto disease)
     {
-        try
+        if (ModelState.IsValid)
         {
-            var data = JsonConvert.SerializeObject(disease);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return RedirectToAction(nameof(Index));
+                var data = JsonConvert.SerializeObject(disease);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddModelError("", ex.Message);
-            return View();
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View();
+            }
         }
         return View();
     }
@@ -54,7 +57,7 @@ public class DiseasesController : BaseController
     public async Task<IActionResult> View(int id)
     {
         DiseaseViewDto disease = new DiseaseViewDto();
-        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url +  id);
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
 
         if (response.IsSuccessStatusCode)
         {
@@ -81,20 +84,23 @@ public class DiseasesController : BaseController
     [HttpPost]
     public async Task<IActionResult> Edit(DiseaseUpdateDto disease)
     {
-        try
+        if (ModelState.IsValid)
         {
-            var data = JsonConvert.SerializeObject(disease);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return RedirectToAction(nameof(Index));
+                var data = JsonConvert.SerializeObject(disease);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddModelError("", ex.Message);
-            return View();
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View();
+            }
         }
         return View();
     }
