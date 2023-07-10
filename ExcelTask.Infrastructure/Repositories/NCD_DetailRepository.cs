@@ -16,4 +16,9 @@ public class NCD_DetailRepository : GenericRepository<NCD_Detail>, INCD_DetailRe
     {
         return await _dbSet.Where(nd => nd.PatientId == patientId).ToListAsync();
     }
+
+    public async Task<NCD_Detail> GetEntityByPatientIdAndNcdIdAsync(int patientId, int ncdId)
+    {
+        return await _dbSet.Where(nd => nd.PatientId == patientId && nd.NCDId == ncdId).FirstOrDefaultAsync();
+    }
 }

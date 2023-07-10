@@ -16,4 +16,9 @@ public class Allergies_DetailRepository : GenericRepository<Allergies_Detail>, I
     {
         return await _dbSet.Where(ad => ad.PatientId == patientId).ToListAsync();
     }
+
+    public async Task<Allergies_Detail> GetEntityByPatientIdAndAllergiesIdAsync(int patientId, int allergiesId)
+    {
+        return await _dbSet.Where(ad => ad.PatientId == patientId && ad.AllergiesId == allergiesId).FirstOrDefaultAsync();
+    }
 }

@@ -37,6 +37,13 @@ public class PatientsController : ControllerBase
         return Ok();
     }
 
+    [HttpPut]
+    public async Task<IActionResult> Put(PatientUpdateDto patient)
+    {
+        await _patientService.UpdatePatient(patient);
+        return Ok();
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

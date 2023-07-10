@@ -83,4 +83,15 @@ public class Allergies_DetailService : IAllergies_DetailService
         }
         return allergiesDetails;
     }
+
+    public async Task<Allergies_DetailViewDto> GetAllergiesDetailByPatientIdAndAllergiesIdAsync(int patientId, int allergiesId)
+    {
+        var entity = await _unitOfWork.Allergies_Details.GetEntityByPatientIdAndAllergiesIdAsync(patientId, allergiesId);
+        return new Allergies_DetailViewDto
+        {
+            Id = entity.Id,
+            PatientId = entity.PatientId,
+            AllergiesId = entity.AllergiesId
+        };
+    }
 }

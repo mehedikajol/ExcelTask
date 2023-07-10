@@ -90,7 +90,7 @@ public class PatientService : IPatientService
                 Id = allergy.Id,
                 PatientId = allergy.PatientId,
                 AllergiesId = allergy.AllergiesId,
-                AllergiesName =  _unitOfWork.Allergies.GetEntityByIdAsync(allergy.AllergiesId).Result.Name
+                AllergiesName = _unitOfWork.Allergies.GetEntityByIdAsync(allergy.AllergiesId).Result.Name
             });
         }
 
@@ -99,7 +99,7 @@ public class PatientService : IPatientService
             Id = entity.Id,
             Name = entity.Name,
             DiseaseId = entity.DiseaseId,
-            DiseaseName = _unitOfWork.Diseases.GetEntityByIdAsync(entity.DiseaseId).Result.Name,    
+            DiseaseName = _unitOfWork.Diseases.GetEntityByIdAsync(entity.DiseaseId).Result.Name,
             Epilepsy = (int)entity.Epilepsy,
             EpilepsyName = entity.Epilepsy.ToString(),
             NCDs = ncds,
@@ -141,6 +141,75 @@ public class PatientService : IPatientService
                 });
             }
         }
+        await _unitOfWork.CompleteAsync();
+    }
+
+    public async Task UpdatePatient(PatientUpdateDto patient)
+    {
+        await _unitOfWork.Patients.UpdateEntity(new Patient
+        {
+            Id = patient.Id,
+            Name = patient.Name,
+            DiseaseId = patient.DiseaseId,
+            Epilepsy = (Epilepsy)patient.Epilepsy
+        });
+
+        var ncdDetails = await _unitOfWork.NCD_Details.GetEntitiesByPatientIdAsync(patient.Id);
+        foreach (var ncd in ncdDetails)
+        {
+            var newDto = new Ncd_DetailUpdateDto
+            {
+                PatientId = patient.Id,
+                NCDId = ncd.NCDId
+            };
+            var patientNcd = patient.NCDs.Where(x => x.PatientId == newDto.PatientId && x.NCDId == newDto.NCDId).FirstOrDefault();
+            if (patientNcd is null)
+            {
+                await _unitOfWork.NCD_Details.DeleteEntityByIdAsync(ncd.Id);
+            }
+        }
+        foreach (var ncd in patient.NCDs)
+        {
+            var ncdEntity = await _unitOfWork.NCD_Details.GetEntityByPatientIdAndNcdIdAsync(patient.Id, ncd.NCDId);
+            if (ncdEntity is null)
+            {
+                await _unitOfWork.NCD_Details.AddEntityAsync(new NCD_Detail
+                {
+                    PatientId = patient.Id,
+                    NCDId = ncd.NCDId
+                });
+            }
+        }
+
+        var allergiesDetails = await _unitOfWork.Allergies_Details.GetEntitiesByPatientIdAsync(patient.Id);
+        foreach (var allergies in allergiesDetails)
+        {
+            var newDto = new Allergies_DetailUpdateDto
+            {
+                PatientId = patient.Id,
+                AllergiesId = allergies.AllergiesId
+            };
+            var patientAllergies = patient.Allergies
+                .Where(x => x.PatientId == newDto.PatientId && x.AllergiesId == newDto.AllergiesId)
+                .FirstOrDefault();
+            if (patientAllergies is null)
+            {
+                await _unitOfWork.Allergies_Details.DeleteEntityByIdAsync(allergies.Id);
+            }
+        }
+        foreach (var allergies in patient.Allergies)
+        {
+            var allergyEntity = await _unitOfWork.Allergies_Details.GetEntityByPatientIdAndAllergiesIdAsync(patient.Id, allergies.AllergiesId);
+            if (allergyEntity is null)
+            {
+                await _unitOfWork.Allergies_Details.AddEntityAsync(new Allergies_Detail
+                {
+                    PatientId = patient.Id,
+                    AllergiesId = allergies.AllergiesId
+                });
+            }
+        }
+
         await _unitOfWork.CompleteAsync();
     }
 

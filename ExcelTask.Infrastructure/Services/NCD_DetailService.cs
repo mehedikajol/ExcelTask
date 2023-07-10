@@ -83,4 +83,15 @@ public class NCD_DetailService : INCD_DetailService
         }
         return ncdDetails;
     }
+
+    public async Task<Ncd_DetailViewDto> GetAllergiesDetailByPatientIdAndNcdIdAsync(int patientId, int ncdId)
+    {
+        var entity = await _unitOfWork.NCD_Details.GetEntityByPatientIdAndNcdIdAsync(patientId, ncdId);
+        return new Ncd_DetailViewDto
+        {
+            Id = entity.Id,
+            PatientId = entity.PatientId,
+            NCDId = entity.NCDId
+        };
+    }
 }

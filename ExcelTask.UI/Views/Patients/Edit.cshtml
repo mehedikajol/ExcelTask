@@ -1,4 +1,4 @@
-﻿@model PatientCreateDto
+﻿@model PatientUpdateDto
 
 @{
     ViewData["Title"] = "Create";
@@ -11,6 +11,7 @@
 <div class="row">
     <form asp-action="Create" class="col-12">
         <div asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="Id" type="hidden" />
         <div class="row">
             <div class="col-md-2">
                 <label asp-for="Name" class="control-label"></label>
@@ -58,7 +59,7 @@
             </div>
         </div>
         <div class="form-group my-2">
-            <button type="button" class="btn btn-primary" id="submitButton">Create</button>
+            <button type="button" class="btn btn-primary" id="submitButton">Save</button>
         </div>
     </form>
 </div>
@@ -94,32 +95,70 @@
     }
     <script src="~/js/jquery.transfer.js"></script>
     <script type="text/javascript">
-        var ncds = [];
+
+        var currentNcds = @Html.Raw(Json.Serialize(ViewBag.PatientNcds));
         var array1 = @Html.Raw(Json.Serialize(ViewBag.Ncds));
+        var ncds = [], selectedNcds = [];
+        for (var i = 0; i < array1.length; i++) {
+            if (currentNcds.includes(array1[i].id)) {
+                selectedNcds.push({
+                    item: array1[i].name,
+                    value: array1[i].id,
+                    selected: true
+                });
+                ncds.push({
+                    item: array1[i].name,
+                    value: array1[i].id
+                })
+            } else {
+                selectedNcds.push({
+                    item: array1[i].name,
+                    value: array1[i].id,
+                    selected: false
+                });
+            }
+        }
         var settings1 = {
-            "dataArray": array1,
-            "itemName": "name",
-            "valueName": "id",
+            "dataArray": selectedNcds,
             "callable": function (items) {
                 ncds = items;
             }
         };
         $("#transfer1").transfer(settings1);
 
-        var allergies = [];
+
+        var currentAllergies = @Html.Raw(Json.Serialize(ViewBag.PatientAllergies));
         var array2 = @Html.Raw(Json.Serialize(ViewBag.Allergies));
+        var allergies = [], selectedAllergies = [];
+        for (var i = 0; i < array2.length; i++) {
+            if (currentAllergies.includes(array2[i].id)) {
+                selectedAllergies.push({
+                    item: array2[i].name,
+                    value: array2[i].id,
+                    selected: true
+                });
+                allergies.push({
+                    item: array2[i].name,
+                    value: array2[i].id,
+                })
+            } else {
+                selectedAllergies.push({
+                    item: array2[i].name,
+                    value: array2[i].id,
+                    selected: false
+                });
+            }
+        }
         var settings2 = {
-            "dataArray": array2,
-            "itemName": "name",
-            "valueName": "id",
+            "dataArray": selectedAllergies,
             "callable": function (items) {
                 allergies = items;
             }
         };
         $("#transfer2").transfer(settings2);
 
-
         $("#submitButton").on("click", function () {
+            var id = $("#Id").val();
             var name = $("#Name").val();
             var diseaseId = $("#DiseaseId").val();
             var epilepsy = $("#Epilepsy").val();
@@ -127,8 +166,8 @@
             var patientNcds = [];
             for (var i = 0; i < ncds.length; i++) {
                 var obj = {
-                    patientId: 0,
-                    nCDId: ncds[i].id
+                    patientId: id,
+                    nCDId: ncds[i].value
                 };
                 patientNcds.push(obj);
             }
@@ -136,13 +175,14 @@
             var patientAllergies = [];
             for (var i = 0; i < allergies.length; i++) {
                 var obj = {
-                    patientId: 0,
-                    allergiesId: allergies[i].id
+                    patientId: id,
+                    allergiesId: allergies[i].value
                 };
                 patientAllergies.push(obj);
             }
 
             var patient = {
+                id: id,
                 name: name,
                 diseaseId: diseaseId,
                 epilepsy: epilepsy,
@@ -150,15 +190,16 @@
                 allergies: patientAllergies
             };
 
+            console.log(patient)
+
             $.ajax({
                 type: "POST",
                 dataType: 'json',
-                url: "/Patients/Create",
+                url: "/Patients/Edit",
                 contentType: "application/json",
                 traditional: true,
                 data: JSON.stringify(patient),
                 success: function (response) {
-                    //console.log(response);
                     window.location.href = "/Patients/Index";
                 }
             });

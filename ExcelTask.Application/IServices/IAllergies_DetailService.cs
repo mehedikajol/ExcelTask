@@ -12,4 +12,5 @@ public interface IAllergies_DetailService
     Task DeleteAllergiesDetailAsync(int id);
 
     Task<IEnumerable<Allergies_DetailViewDto>> GetAllergiesDetailsByPatientIdAsync(int patientId);
+    Task<Allergies_DetailViewDto> GetAllergiesDetailByPatientIdAndAllergiesIdAsync(int patientId, int allergiesId);
 }
