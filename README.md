@@ -2,7 +2,7 @@
 Software Engineer position
 
 ## Github
-Please download this project or clone it and use checkout to **main** branch for final result. 
+Please download this project or clone it and checkout to **main** branch for final result. 
 
 ## Technologies
 Asp.Ner Core 6 MVC, Asp.Net Core 6 API, Repository Pattern, Unit Of Work Pattern, Clean/Onion Architecture, EF Core (EntityFramework Core)
