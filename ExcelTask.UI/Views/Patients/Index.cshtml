@@ -4,33 +4,85 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Patients</h1>
+                <a class="btn btn-primary btn-sm mt-2" asp-action="Create">
+                    <i class="fas fa-plus"></i>
+                    Create
+                </a>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">Patients</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Disease</th>
-            <th>Epilepsy</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.DiseaseName</td>
-                <td>@item.EpilepsyName</td>
-                <td>
-                    <a asp-asp-controller="Patients" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-asp-controller="Patients" asp-action="View" asp-route-id="@item.Id">Details</a> |
-                    <a asp-asp-controller="Patients" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Patients</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="categoriesTable" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Disease</th>
+                                    <th>Epilepsy</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.DiseaseName</td>
+                                        <td>@item.EpilepsyName</td>
+                                        <td>
+                                            <a class="btn btn-info btn-sm" asp-action="View" asp-route-id="@item.Id">
+                                                <i class="fas fa-eye"></i>View
+                                            </a>
+                                            <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="far fa-edit"></i>Edit
+                                            </a>
+                                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">
+                                                <i class="fas fa-trash-alt"></i>Delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Disease</th>
+                                    <th>Epilepsy</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>

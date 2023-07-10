@@ -32,20 +32,23 @@ public class AllergiesController : BaseController
     [HttpPost]
     public async Task<IActionResult> Create(AllergiesCreateDto allergies)
     {
-        try
+        if (ModelState.IsValid)
         {
-            var data = JsonConvert.SerializeObject(allergies);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return RedirectToAction(nameof(Index));
+                var data = JsonConvert.SerializeObject(allergies);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddModelError("", ex.Message);
-            return View();
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View();
+            }
         }
         return View();
     }
@@ -81,20 +84,23 @@ public class AllergiesController : BaseController
     [HttpPost]
     public async Task<IActionResult> Edit(AllergiesUpdateDto allergies)
     {
-        try
+        if (ModelState.IsValid)
         {
-            var data = JsonConvert.SerializeObject(allergies);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return RedirectToAction(nameof(Index));
+                var data = JsonConvert.SerializeObject(allergies);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddModelError("", ex.Message);
-            return View();
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View();
+            }
         }
         return View();
     }
