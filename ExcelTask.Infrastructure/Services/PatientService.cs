@@ -20,17 +20,56 @@ public class PatientService : IPatientService
         var entities = await _unitOfWork.Patients.GetAllEntitiesAsync();
         var patients = new List<PatientViewDto>();
 
-        foreach(var entity in entities)
+        foreach (var entity in entities)
         {
             patients.Add(new PatientViewDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
                 DiseaseId = entity.DiseaseId,
-                Epilepsy = entity.Epilepsy.GetHashCode()
+                Epilepsy = (int)entity.Epilepsy
             });
         }
         return patients;
+    }
+
+    public async Task<PatientViewDto> GetPatientByIdAsync(int id)
+    {
+        var entity = await _unitOfWork.Patients.GetEntityByIdAsync(id);
+        var ncdsEntities = await _unitOfWork.NCD_Details.GetEntitiesByPatientIdAsync(id);
+        var allergiesEntities = await _unitOfWork.Allergies_Details.GetEntitiesByPatientIdAsync(id);
+
+        var ncds = new List<Ncd_DetailViewDto>();
+        foreach (var ncd in ncdsEntities)
+        {
+            ncds.Add(new Ncd_DetailViewDto
+            {
+                Id = ncd.Id,
+                PatientId = ncd.PatientId,
+                NCDId = ncd.NCDId,
+            });
+        }
+
+        var allergies = new List<Allergies_DetailViewDto>();
+        foreach (var allergy in allergiesEntities)
+        {
+            allergies.Add(new Allergies_DetailViewDto
+            {
+                Id = allergy.Id,
+                PatientId = allergy.PatientId,
+                AllergiesId = allergy.AllergiesId
+            });
+        }
+
+        return new PatientViewDto
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            DiseaseId = entity.DiseaseId,
+            Epilepsy = (int)entity.Epilepsy,
+            NCDs = ncds,
+            Allergies = allergies,
+        };
     }
 
     public async Task AddPatientAsync(PatientCreateDto patient)
@@ -67,6 +106,12 @@ public class PatientService : IPatientService
                 });
             }
         }
+        await _unitOfWork.CompleteAsync();
+    }
+
+    public async Task DeletePatientAsync(int id)
+    {
+        await _unitOfWork.Patients.DeleteEntityByIdAsync(id);
         await _unitOfWork.CompleteAsync();
     }
 }

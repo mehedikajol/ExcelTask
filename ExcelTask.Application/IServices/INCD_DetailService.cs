@@ -10,4 +10,6 @@ public interface INCD_DetailService
     Task AddNcdDetailAsync(Ncd_DetailCreateDto ncdDetail);
     Task UpdateDetailNcd(Ncd_DetailUpdateDto ncdDetail);
     Task DeleteNcdDetailAsync(int id);
+
+    Task<IEnumerable<Ncd_DetailViewDto>> GetNcdDetailsByPatientIdAsync(int patientId);
 }

@@ -19,14 +19,28 @@ public class PatientsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var patients = await _patientService.GetAllPatientsAsync();
-        return Ok(patients);
+        var patient = await _patientService.GetAllPatientsAsync();
+        return Ok(patient);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(int id)
+    {
+        var allergies = await _patientService.GetPatientByIdAsync(id);
+        return Ok(allergies);
     }
 
     [HttpPost]
     public async Task<IActionResult> Post(PatientCreateDto patient)
     {
         await _patientService.AddPatientAsync(patient);
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _patientService.DeletePatientAsync(id);
         return Ok();
     }
 }

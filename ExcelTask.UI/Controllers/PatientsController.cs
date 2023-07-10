@@ -64,6 +64,32 @@ public class PatientsController : BaseController
         return View();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        PatientViewDto patient = new PatientViewDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            patient = JsonConvert.DeserializeObject<PatientViewDto>(data);
+        }
+        return View(patient);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(PatientViewDto patient)
+    {
+        HttpResponseMessage response = await _client.DeleteAsync(_client.BaseAddress + url + patient.Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+        return View(patient);
+    }
+
 
     private async Task<List<DiseaseViewDto>> GetAllDiseases()
     {
