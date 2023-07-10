@@ -22,12 +22,43 @@ public class PatientService : IPatientService
 
         foreach (var entity in entities)
         {
+            var ncdsEntities = await _unitOfWork.NCD_Details.GetEntitiesByPatientIdAsync(entity.Id);
+            var allergiesEntities = await _unitOfWork.Allergies_Details.GetEntitiesByPatientIdAsync(entity.Id);
+
+            var ncds = new List<Ncd_DetailViewDto>();
+            foreach (var ncd in ncdsEntities)
+            {
+                ncds.Add(new Ncd_DetailViewDto
+                {
+                    Id = ncd.Id,
+                    PatientId = ncd.PatientId,
+                    NCDId = ncd.NCDId,
+                    NCDName = _unitOfWork.NCDs.GetEntityByIdAsync(ncd.NCDId).Result.Name
+                });
+            }
+
+            var allergies = new List<Allergies_DetailViewDto>();
+            foreach (var allergy in allergiesEntities)
+            {
+                allergies.Add(new Allergies_DetailViewDto
+                {
+                    Id = allergy.Id,
+                    PatientId = allergy.PatientId,
+                    AllergiesId = allergy.AllergiesId,
+                    AllergiesName = _unitOfWork.Allergies.GetEntityByIdAsync(allergy.AllergiesId).Result.Name
+                });
+            }
+
             patients.Add(new PatientViewDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
                 DiseaseId = entity.DiseaseId,
-                Epilepsy = (int)entity.Epilepsy
+                DiseaseName = _unitOfWork.Diseases.GetEntityByIdAsync(entity.DiseaseId).Result.Name,
+                Epilepsy = (int)entity.Epilepsy,
+                EpilepsyName = entity.Epilepsy.ToString(),
+                NCDs = ncds,
+                Allergies = allergies,
             });
         }
         return patients;
@@ -47,6 +78,7 @@ public class PatientService : IPatientService
                 Id = ncd.Id,
                 PatientId = ncd.PatientId,
                 NCDId = ncd.NCDId,
+                NCDName = _unitOfWork.NCDs.GetEntityByIdAsync(ncd.NCDId).Result.Name
             });
         }
 
@@ -57,7 +89,8 @@ public class PatientService : IPatientService
             {
                 Id = allergy.Id,
                 PatientId = allergy.PatientId,
-                AllergiesId = allergy.AllergiesId
+                AllergiesId = allergy.AllergiesId,
+                AllergiesName =  _unitOfWork.Allergies.GetEntityByIdAsync(allergy.AllergiesId).Result.Name
             });
         }
 
@@ -66,7 +99,9 @@ public class PatientService : IPatientService
             Id = entity.Id,
             Name = entity.Name,
             DiseaseId = entity.DiseaseId,
+            DiseaseName = _unitOfWork.Diseases.GetEntityByIdAsync(entity.DiseaseId).Result.Name,    
             Epilepsy = (int)entity.Epilepsy,
+            EpilepsyName = entity.Epilepsy.ToString(),
             NCDs = ncds,
             Allergies = allergies,
         };

@@ -1,0 +1,74 @@
+﻿@model PatientViewDto
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+
+<div>
+    <h4>Allergies</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Disease
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DiseaseName)
+        </dd>
+        <dt class="col-sm-2">
+            Epilepsy
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EpilepsyName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NCDs)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var ncd in Model.NCDs)
+            {
+                if (Model.NCDs.Last() == ncd)
+                {
+                    <span>@ncd.NCDName</span>
+                }
+                else
+                {
+                    <span>@ncd.NCDName, </span>
+                }
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Allergies)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach(var allergy in Model.Allergies)
+            {
+                if(Model.Allergies.Last() == allergy)
+                {
+                    <span>@allergy.AllergiesName</span>
+                }
+                else
+                {
+                    <span>@allergy.AllergiesName, </span>
+                }
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-asp-controller="Allergies" asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

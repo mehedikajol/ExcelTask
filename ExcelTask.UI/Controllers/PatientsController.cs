@@ -65,6 +65,21 @@ public class PatientsController : BaseController
     }
 
     [HttpGet]
+    public async Task<IActionResult> View(int id)
+    {
+        PatientViewDto patient = new PatientViewDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            patient = JsonConvert.DeserializeObject<PatientViewDto>(data);
+        }
+        return View(patient);
+    }
+
+
+    [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
         PatientViewDto patient = new PatientViewDto();
