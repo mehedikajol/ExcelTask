@@ -42,24 +42,35 @@ public class PatientsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] PatientCreateDto patient)
     {
-        try
+        if (ModelState.IsValid)
         {
-            var data = JsonConvert.SerializeObject(patient);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return new JsonResult(new
+                var data = JsonConvert.SerializeObject(patient);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _client.PostAsync(_client.BaseAddress + url, content);
+                if (response.IsSuccessStatusCode)
                 {
-                    Done = true,
-                    Message = "Success"
-                });
+                    return new JsonResult(new
+                    {
+                        Done = true,
+                        Message = "Success"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View();
             }
         }
-        catch (Exception ex)
+        else
         {
-            ModelState.AddModelError("", ex.Message);
-            return View();
+            return new JsonResult(new
+            {
+                Done = false,
+                Message = "Please check the values before submitting."
+            });
         }
         return View();
     }
@@ -109,24 +120,35 @@ public class PatientsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Edit([FromBody] PatientUpdateDto patient)
     {
-        try
+        if (ModelState.IsValid)
         {
-            var data = JsonConvert.SerializeObject(patient);
-            var content = new StringContent(data, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return new JsonResult(new
+                var data = JsonConvert.SerializeObject(patient);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
+                if (response.IsSuccessStatusCode)
                 {
-                    Done = true,
-                    Message = "Success"
-                });
+                    return new JsonResult(new
+                    {
+                        Done = true,
+                        Message = "Success"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View();
             }
         }
-        catch (Exception ex)
+        else
         {
-            ModelState.AddModelError("", ex.Message);
-            return View();
+            return new JsonResult(new
+            {
+                Done = false,
+                Message = "Please check the values before submitting."
+            });
         }
         return View();
     }
