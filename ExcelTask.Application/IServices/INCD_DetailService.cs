@@ -1,4 +1,5 @@
 ﻿using ExcelTask.Application.DTOs;
+using ExcelTask.Core.Entities;
 
 namespace ExcelTask.Application.IServices;
 
@@ -10,4 +11,7 @@ public interface INCD_DetailService
     Task AddNcdDetailAsync(Ncd_DetailCreateDto ncdDetail);
     Task UpdateDetailNcd(Ncd_DetailUpdateDto ncdDetail);
     Task DeleteNcdDetailAsync(int id);
+
+    Task<IEnumerable<Ncd_DetailViewDto>> GetNcdDetailsByPatientIdAsync(int patientId);
+    Task<Ncd_DetailViewDto> GetAllergiesDetailByPatientIdAndNcdIdAsync(int patientId, int ncdId);
 }

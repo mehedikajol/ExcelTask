@@ -67,4 +67,31 @@ public class NCD_DetailService : INCD_DetailService
         await _unitOfWork.NCD_Details.DeleteEntityByIdAsync(id);
         await _unitOfWork.CompleteAsync();
     }
+
+    public async Task<IEnumerable<Ncd_DetailViewDto>> GetNcdDetailsByPatientIdAsync(int patientId)
+    {
+        var entities = await _unitOfWork.NCD_Details.GetEntitiesByPatientIdAsync(patientId);
+        var ncdDetails = new List<Ncd_DetailViewDto>();
+        foreach (var entity in entities)
+        {
+            ncdDetails.Add(new Ncd_DetailViewDto
+            {
+                Id = entity.Id,
+                PatientId = entity.PatientId,
+                NCDId = entity.NCDId
+            });
+        }
+        return ncdDetails;
+    }
+
+    public async Task<Ncd_DetailViewDto> GetAllergiesDetailByPatientIdAndNcdIdAsync(int patientId, int ncdId)
+    {
+        var entity = await _unitOfWork.NCD_Details.GetEntityByPatientIdAndNcdIdAsync(patientId, ncdId);
+        return new Ncd_DetailViewDto
+        {
+            Id = entity.Id,
+            PatientId = entity.PatientId,
+            NCDId = entity.NCDId
+        };
+    }
 }

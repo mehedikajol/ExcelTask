@@ -10,4 +10,7 @@ public interface IAllergies_DetailService
     Task AddAllergiesDetailAsync(Allergies_DetailCreateDto allergiesDetail);
     Task UpdateAllergiesDetail(Allergies_DetailUpdateDto allergiesDetail);
     Task DeleteAllergiesDetailAsync(int id);
+
+    Task<IEnumerable<Allergies_DetailViewDto>> GetAllergiesDetailsByPatientIdAsync(int patientId);
+    Task<Allergies_DetailViewDto> GetAllergiesDetailByPatientIdAndAllergiesIdAsync(int patientId, int allergiesId);
 }

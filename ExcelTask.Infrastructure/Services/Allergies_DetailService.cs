@@ -67,4 +67,31 @@ public class Allergies_DetailService : IAllergies_DetailService
         await _unitOfWork.Allergies_Details.DeleteEntityByIdAsync(id);
         await _unitOfWork.CompleteAsync();
     }
+
+    public async Task<IEnumerable<Allergies_DetailViewDto>> GetAllergiesDetailsByPatientIdAsync(int patientId)
+    {
+        var entities = await _unitOfWork.Allergies_Details.GetEntitiesByPatientIdAsync(patientId);
+        var allergiesDetails = new List<Allergies_DetailViewDto>();
+        foreach (var entity in entities)
+        {
+            allergiesDetails.Add(new Allergies_DetailViewDto
+            {
+                Id = entity.Id,
+                PatientId = entity.PatientId,
+                AllergiesId = entity.AllergiesId,
+            });
+        }
+        return allergiesDetails;
+    }
+
+    public async Task<Allergies_DetailViewDto> GetAllergiesDetailByPatientIdAndAllergiesIdAsync(int patientId, int allergiesId)
+    {
+        var entity = await _unitOfWork.Allergies_Details.GetEntityByPatientIdAndAllergiesIdAsync(patientId, allergiesId);
+        return new Allergies_DetailViewDto
+        {
+            Id = entity.Id,
+            PatientId = entity.PatientId,
+            AllergiesId = entity.AllergiesId
+        };
+    }
 }

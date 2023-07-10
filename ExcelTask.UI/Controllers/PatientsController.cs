@@ -64,6 +64,100 @@ public class PatientsController : BaseController
         return View();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> View(int id)
+    {
+        PatientViewDto patient = new PatientViewDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            patient = JsonConvert.DeserializeObject<PatientViewDto>(data);
+        }
+        return View(patient);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        PatientUpdateDto patient = new PatientUpdateDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            patient = JsonConvert.DeserializeObject<PatientUpdateDto>(data);
+        }
+        var patientNcds = patient?.NCDs?.Select(p => p.NCDId).ToList();
+        var patientAllergies = patient?.Allergies?.Select(p => p.AllergiesId).ToList();
+
+        var diseases = await GetAllDiseases();
+        var epilepsyies = GetAllEpilepsies();
+        var allergies = await GetAllAllergies();
+        var ncds = await GetAllNcds();
+        ViewData["Diseases"] = new SelectList(diseases, "Id", "Name");
+        ViewData["Epilepsyies"] = new SelectList(epilepsyies, "Id", "Name");
+        ViewData["Allergies"] = new List<AllergiesViewDto>(allergies);
+        ViewData["PatientAllergies"] = patientAllergies;
+        ViewData["Ncds"] = new List<NcdViewDto>(ncds);
+        ViewData["PatientNcds"] = patientNcds;
+
+        return View(patient);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit([FromBody] PatientUpdateDto patient)
+    {
+        try
+        {
+            var data = JsonConvert.SerializeObject(patient);
+            var content = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PutAsync(_client.BaseAddress + url, content);
+            if (response.IsSuccessStatusCode)
+            {
+                return new JsonResult(new
+                {
+                    Done = true,
+                    Message = "Success"
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return View();
+        }
+        return View();
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        PatientViewDto patient = new PatientViewDto();
+        HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + url + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string data = await response.Content.ReadAsStringAsync();
+            patient = JsonConvert.DeserializeObject<PatientViewDto>(data);
+        }
+        return View(patient);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(PatientViewDto patient)
+    {
+        HttpResponseMessage response = await _client.DeleteAsync(_client.BaseAddress + url + patient.Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+        return View(patient);
+    }
+
 
     private async Task<List<DiseaseViewDto>> GetAllDiseases()
     {
