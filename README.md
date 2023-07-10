@@ -1,6 +1,9 @@
 # ExcelTask
 Software Engineer position
 
+## Github
+Please download this project or clone it and use checkout to **main** branch for final result. 
+
 ## Technologies
 Asp.Ner Core 6 MVC, Asp.Net Core 6 API, Repository Pattern, Unit Of Work Pattern, Clean/Onion Architecture, EF Core (EntityFramework Core)
 
@@ -15,3 +18,5 @@ To start the project please right click on the **solution** and click **Configur
 This project is mainly focused on creating a patient information portal. 
 To create a patient, it requires some values to be inputed first, such as **Diseases, Allergies and NCDs**.<br>
 Please make sure to input the mentioned data before creating a patient.
+
+Thank you
