@@ -5,7 +5,7 @@ Software Engineer position
 Asp.Ner Core 6 MVC, Asp.Net Core 6 API, Repository Pattern, Unit Of Work Pattern, Clean/Onion Architecture, EF Core (EntityFramework Core)
 
 ## Database script and connection string
-Please use Script.sql file to create the database names **ExcelTaskDB** and use **SQL Server** as database server.<br>
+Please use Script.sql file to create the database named **ExcelTaskDB** and use **SQL Server** as database server.<br>
 Make use to update connection string with your server name from appsettings.json file in ExcelTask.Api project.
 
 ## Start the project
