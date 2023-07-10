@@ -1,0 +1,247 @@
+﻿@model PatientUpdateDto
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Edit an existing patient</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Patients</a>
+                    </li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Patient edit form</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form method="post" asp-antiforgery="true" asp-action="Create">
+                        <div class="card-body">
+                            <div class="text-danger validation-summary-errors" data-valmsg-summary="true">
+                                <ul>
+                                </ul>
+                            </div>
+                            <input asp-for="Id" type="hidden" />
+                            <div class="form-group">
+                                <dl class="row">
+                                    <dt class="col-sm-2">
+                                        <label asp-for="Name" class="control-label"></label>
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        <input asp-for="Name" class="form-control" placeholder="Enter patient name" required />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </dd>
+                                    <dt class="col-sm-2">
+                                        <label asp-for="DiseaseId" class="control-label">Disease</label>
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        <select asp-for="DiseaseId" asp-items="ViewBag.Diseases" class="custom-select" required>
+                                            <option value="">-- Select Disease --</option>
+                                        </select>
+                                        <span asp-validation-for="DiseaseId" class="text-danger"></span>
+                                    </dd>
+                                    <dt class="col-sm-2">
+                                        <label asp-for="Epilepsy" class="control-label">Epilepsy</label>
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        <select asp-for="Epilepsy" asp-items="ViewBag.Epilepsyies" class="custom-select">
+                                        </select>
+                                        <span asp-validation-for="Epilepsy" class="text-danger"></span>
+                                    </dd>
+                                    <dt class="col-sm-2">
+                                        <label class="control-label">NCDs</label>
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        <div id="transfer1" class="transfer-demo"></div>
+                                    </dd>
+                                    <dt class="col-sm-2">
+                                        <label class="control-label">Allergies</label>
+                                    </dt>
+                                    <dd class="col-sm-10">
+                                        <div id="transfer2" class="transfer-demo"></div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary" id="submitButton">Update</button>
+                            <a asp-action="Index" class="btn btn-default">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Styles{
+    <link href="~/icon_font/css/icon_font.css" rel="stylesheet" />
+    <link href="~/css/jquery.transfer.css" rel="stylesheet" />
+    <style>
+        .transfer-demo {
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        .transfer-double-content-param,
+        .transfer-double-list-header,
+        .transfer-double-list-footer,
+        .transfer-double-selected-list-header {
+            display: none
+        }
+    </style>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/jquery.transfer.js"></script>
+    <script type="text/javascript">
+
+        var currentNcds = @Html.Raw(Json.Serialize(ViewBag.PatientNcds));
+        var array1 = @Html.Raw(Json.Serialize(ViewBag.Ncds));
+        var ncds = [], selectedNcds = [];
+        for (var i = 0; i < array1.length; i++) {
+            if (currentNcds.includes(array1[i].id)) {
+                selectedNcds.push({
+                    item: array1[i].name,
+                    value: array1[i].id,
+                    selected: true
+                });
+                ncds.push({
+                    item: array1[i].name,
+                    value: array1[i].id
+                })
+            } else {
+                selectedNcds.push({
+                    item: array1[i].name,
+                    value: array1[i].id,
+                    selected: false
+                });
+            }
+        }
+        var settings1 = {
+            "dataArray": selectedNcds,
+            "callable": function (items) {
+                ncds = items;
+            }
+        };
+        $("#transfer1").transfer(settings1);
+
+
+        var currentAllergies = @Html.Raw(Json.Serialize(ViewBag.PatientAllergies));
+        var array2 = @Html.Raw(Json.Serialize(ViewBag.Allergies));
+        var allergies = [], selectedAllergies = [];
+        for (var i = 0; i < array2.length; i++) {
+            if (currentAllergies.includes(array2[i].id)) {
+                selectedAllergies.push({
+                    item: array2[i].name,
+                    value: array2[i].id,
+                    selected: true
+                });
+                allergies.push({
+                    item: array2[i].name,
+                    value: array2[i].id,
+                })
+            } else {
+                selectedAllergies.push({
+                    item: array2[i].name,
+                    value: array2[i].id,
+                    selected: false
+                });
+            }
+        }
+        var settings2 = {
+            "dataArray": selectedAllergies,
+            "callable": function (items) {
+                allergies = items;
+            }
+        };
+        $("#transfer2").transfer(settings2);
+
+        $("#submitButton").on("click", function () {
+            var id = $("#Id").val();
+            var name = $("#Name").val();
+            var diseaseId = $("#DiseaseId").val();
+            var epilepsy = $("#Epilepsy").val();
+
+            if (name == "") {
+                alert("Name is required");
+                return false;
+            }
+            if (diseaseId == 0) {
+                alert("Disease is required.");
+                return false;
+            }
+
+            var patientNcds = [];
+            for (var i = 0; i < ncds.length; i++) {
+                var obj = {
+                    patientId: id,
+                    nCDId: ncds[i].value
+                };
+                patientNcds.push(obj);
+            }
+
+            var patientAllergies = [];
+            for (var i = 0; i < allergies.length; i++) {
+                var obj = {
+                    patientId: id,
+                    allergiesId: allergies[i].value
+                };
+                patientAllergies.push(obj);
+            }
+
+            var patient = {
+                id: id,
+                name: name,
+                diseaseId: diseaseId,
+                epilepsy: epilepsy,
+                nCDs: patientNcds,
+                allergies: patientAllergies
+            };
+
+            console.log(patient)
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: "/Patients/Edit",
+                contentType: "application/json",
+                traditional: true,
+                data: JSON.stringify(patient),
+                success: function (response) {
+                    if (response.done == true) {
+                        window.location.href = "/Patients/Index";
+                    } else {
+                        $(".validation-summary-errors ul").empty();
+                        $(".validation-summary-errors ul").append('<li>' + response.message + '</li>');
+                    }
+                }
+            });
+        });
+    </script>
+}
