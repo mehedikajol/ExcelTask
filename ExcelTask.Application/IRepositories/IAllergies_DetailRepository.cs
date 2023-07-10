@@ -2,6 +2,6 @@
 
 namespace ExcelTask.Application.IRepositories;
 
-public interface IAllergiesDetailRepository : IGenericRepository<Allergies_Detail>
+public interface IAllergies_DetailRepository : IGenericRepository<Allergies_Detail>
 {
 }
